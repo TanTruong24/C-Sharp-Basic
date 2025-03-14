@@ -31,40 +31,32 @@ namespace QuickSort
         static void recQuickSort(List<int> inputs, int firstIndex, int lastIndex)
         {
             if (firstIndex >= lastIndex) return;
-            else
-            {
-                int pivotValue = inputs[lastIndex];
 
-                int pos = Partition(inputs, firstIndex, lastIndex);
+            int pivotValue = inputs[lastIndex];
 
-                recQuickSort(inputs, firstIndex, pos - 1);
-                recQuickSort(inputs, firstIndex + 1, pos);
-            }
+            int pos = Partition(inputs, firstIndex, lastIndex);
+
+            recQuickSort(inputs, firstIndex, pos - 1);
+            recQuickSort(inputs, pos, lastIndex);
         }
 
         static int Partition(List<int> inputs, int firstIndex, int lastIndex)
         {
             int pivotValue = inputs[lastIndex];
 
-            int left = firstIndex + 1;
-            int right = lastIndex;
+            int storeIndex = firstIndex;
 
-            while (left <= right)
+            for (int i = firstIndex; i < lastIndex; i++)
             {
-                while (left < right && inputs[left] < pivotValue) left++;
-                while (right >= left && inputs[right] >= pivotValue) right--;
-                if (left < right)
+                if (inputs[i] <= pivotValue)
                 {
-                    swap(inputs, left, right);
+                    swap(inputs, i, storeIndex);
+                    storeIndex++;
                 }
             }
-            if (right != firstIndex)
-            {
-                inputs[firstIndex] = inputs[right];
-                inputs[right] = pivotValue;
-            }
+            swap(inputs, storeIndex, lastIndex);
+            return storeIndex;
 
-            return right;
         }
 
         static void swap(List<int> arr, int leftIdx, int rightIdx)

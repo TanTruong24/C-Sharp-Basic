@@ -17,15 +17,17 @@ namespace QuickSort
                 inputs.Add(int.Parse(item));
             }
 
+            int[] numbers = new int[5];
 
-             QuickSort(inputs, 0, inputs.Count - 1);
+
+             QuickSort(inputs);
 
             Console.Write($"sorted input: {string.Join(" ", inputs)}");
         }
 
-        public static void QuickSort(List<int> inputs, int leftMostIndex, int rightMostIndex)
+        public static void QuickSort(List<int> inputs)
         {
-            Partition(inputs, leftMostIndex, rightMostIndex);
+            Partition(inputs, 0, inputs.Count - 1);
         }
 
         static void Partition(List<int> inputs, int leftMostIndex, int rightMostIndex)
@@ -34,25 +36,26 @@ namespace QuickSort
 
             int pivotValue = inputs[rightMostIndex];
 
-            int i = leftMostIndex;
-            int j = rightMostIndex;
+            int left = leftMostIndex;
+            int right = rightMostIndex;
 
-            while (i <= j)
+            while (left <= right)
             {
-                while (inputs[i] < pivotValue) i++;
-                while (inputs[j] > pivotValue) j--;
-                if (i <= j)
+                while (inputs[left] < pivotValue) left++;
+                while (inputs[right] > pivotValue) right--;
+                if (left <= right)
                 {
-                    swap(ref inputs, i, j);
-                    i++;
-                    j--;
+                    swap(inputs, left, right);
+                    left++;
+                    right--;
                 }
             }
-            Partition(inputs, leftMostIndex, j);
-            Partition(inputs, i, rightMostIndex);
+            Partition(inputs, 0, right);
+            Partition(inputs, left, rightMostIndex);
         }
+        
 
-        static void swap(ref List<int> arr, int leftIdx, int rightIdx)
+        static void swap(List<int> arr, int leftIdx, int rightIdx)
         {
             (arr[rightIdx], arr[leftIdx]) = (arr[leftIdx], arr[rightIdx]);
         }
