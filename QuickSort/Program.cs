@@ -10,17 +10,13 @@ namespace QuickSort
 
             string inputString = Console.ReadLine();
 
-            List<int> inputs = new List<int>();
+            List<int> inputs = inputString
+                .Trim()
+                .Split(" ")
+                .Select(int.Parse)
+                .ToList();
 
-            foreach (var item in inputString.Trim(' ').Split(" "))
-            {
-                inputs.Add(int.Parse(item));
-            }
-
-            int[] numbers = new int[5];
-
-
-             QuickSort(inputs);
+            QuickSort(inputs);
 
             Console.Write($"sorted input: {string.Join(" ", inputs)}");
         }
@@ -59,5 +55,8 @@ namespace QuickSort
         {
             (arr[rightIdx], arr[leftIdx]) = (arr[leftIdx], arr[rightIdx]);
         }
+
+        static Action<List<int>, int, int> swapLambda = (arr, leftIdx, rightIdx) =>
+        (arr[rightIdx], arr[leftIdx]) = (arr[leftIdx], arr[rightIdx]);
     }
 }
