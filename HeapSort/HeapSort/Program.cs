@@ -11,14 +11,18 @@
                            .Select(int.Parse)
                            .ToList();
 
-            Heapify(numbers);
+            HeapSort(numbers);
 
             Console.WriteLine("Output: " + string.Join(", ", numbers));
         }
 
-        static void Heapify (List<int> nums)
+        static void swap(List<int> nums, int i, int j)
         {
-            int lenghtIndexNums = nums.Count - 1;
+            (nums[i], nums[j]) = (nums[j], nums[i]);
+        }
+
+        static void Heapify (List<int> nums, int lenghtIndexNums)
+        {
             int i = lenghtIndexNums;
             while (i >= 0)
             {
@@ -46,9 +50,14 @@
             }
         }
 
-        static void swap(List<int> nums, int i, int j) 
+        static void HeapSort(List<int> nums)
         {
-            (nums[i], nums[j]) = (nums[j], nums[i]);
+            for (int i = nums.Count-1; i >= 0; i--)
+            {
+                Heapify(nums, i);
+
+                swap(nums, 0, i);
+            }
         }
     }
 }
