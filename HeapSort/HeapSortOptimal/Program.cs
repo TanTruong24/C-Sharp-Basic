@@ -20,6 +20,7 @@ namespace HeapSortOptimal
                             .ToList();
 
             HeapSort(numbers);
+
             Console.WriteLine("Output: " + string.Join(", ", numbers));
         }
         /*
@@ -50,8 +51,8 @@ namespace HeapSortOptimal
         static void Heapify(List<int> nums, int length, int rootIndex)
         {
             int largestIdx = rootIndex;
-            int leftIdx = 2 * largestIdx + 1;
-            int rightIdx = 2 * largestIdx + 2;
+            int leftIdx = 2 * rootIndex + 1;
+            int rightIdx = 2 * rootIndex + 2;
 
             if (leftIdx < length && nums[leftIdx] > nums[largestIdx])
             {
@@ -76,17 +77,17 @@ namespace HeapSortOptimal
             // Các node lá (leaf nodes) không cần Heapify
             // Trong cây nhị phân dạng mảng, các node lá nằm ở nửa cuối của mảng. Những node này không có con, vì vậy chúng đã là một heap hợp lệ.
             // Vị trí của các node lá: Chỉ mục từ n/2 đến n-1 trong mảng.
-            for (int i = lenght / 2 - 1; i >= 0; i++)
+            for (int i = lenght / 2 - 1; i >= 0; i--)
             {
                 // Node đầu tiên cần Heapify là n/2 - 1. Lý do: Các node từ n/2 trở đi là lá, nên node cha cuối cùng là n/2 - 1.
                 // Các node từ n/2 - 1 về 0 có con, nên cần kiểm tra và sửa đổi để đảm bảo max-heap.
                 Heapify(nums, lenght, i);
             }
 
-            for (int i = lenght; i >= 0; i++)
+            for (int i = lenght-1; i > 0; i--)
             {
                 swap(nums, i, 0);
-                Heapify(nums, lenght, i);
+                Heapify(nums, i, 0);
             }
         }
     }
