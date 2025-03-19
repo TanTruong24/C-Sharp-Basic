@@ -52,7 +52,7 @@ namespace QuickSort
             recQuickSort(inputs, firstIndex, pos - 1);
 
             // Đệ quy sắp xếp mảng con bên phải pivot
-            recQuickSort(inputs, pos + 1, lastIndex); t
+            recQuickSort(inputs, pos + 1, lastIndex);
         }
 
         /*
