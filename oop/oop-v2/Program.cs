@@ -27,7 +27,7 @@ namespace oop_v2
 
             var a = new A();
             a.A1();
-            a.B1()
+            a.B1();
         }
     }
 
