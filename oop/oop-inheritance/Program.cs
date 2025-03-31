@@ -75,7 +75,7 @@ Abstract class và interface
 
 Ví dụ phân biệt:
     Mammal kế thừa Animal → là quan hệ "is a" → dùng class.
-    Dog implement IRunnable → là quan hệ "có khả năng chạy" → dùng interfac
+    Dog implement IRunnable → là quan hệ "có khả năng chạy" → dùng interface
 
 */
 namespace oop_inheritance
