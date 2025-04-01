@@ -28,7 +28,9 @@ namespace Static
         public string ID { get; private set; }
 
         // Instance fields
-        public string Name { get; private set; }
+        // string là kiểu reference type -> nullable (string?) or not null (string)
+        // nếu khai báo "public string Name" bị warning vì Name không được phép null, nhưng không biết giá trị mặc định nào gán cho Name -> warning
+        public string Name { get; set; }
 
         public double Score { get; private set; }
 
