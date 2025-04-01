@@ -17,18 +17,22 @@ namespace Static
          * - không có biến cục bộ static trong c#
          */
 
+        // static fields
         public static int totalStudents { get; private set; }
 
         private static Dictionary<string, double> allScoreStudents = new Dictionary<string, double>();
 
+        // Const: không đổi, thuộc class
         public const string schoolName = "Cam My High School";
 
         public string ID { get; private set; }
 
+        // Instance fields
         public string Name { get; private set; }
 
         public double Score { get; private set; }
 
+        // Static constructor: chỉ chạy 1 lần duy nhất
         static Student()
         {
             Console.WriteLine("Students system....");

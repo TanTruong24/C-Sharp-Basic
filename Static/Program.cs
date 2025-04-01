@@ -10,7 +10,7 @@ namespace Static
 
         ** Đặc điểm chính static class
         1. Chỉ chứa các static members
-            -> không thể khai báo biến hoặc phương thức non-static bên trong
+            -> không thể khai báo biến hoặc phương thức non-static bên trong (nhưng non-static có thể khai báo static member)
 
         2. Không thể khởi tạo (instantiate)
             -> Không thể tạo đối tượng từ static class bằng new
@@ -40,7 +40,7 @@ namespace Static
     */
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] args) 
         {
             Console.WriteLine("Hello, World!");
 
