@@ -50,6 +50,9 @@
                         string Name { get; set; }  // ⬅️ chỉ là khai báo – không cấp phát bộ nhớ
                     }
                     ```
+         *  - interface có thể kế thừa từ một hoặc nhiều interface khác. Một interface có thể kế thừa các thành viên từ các interface cơ sở mà nó kế thừa. 
+         *  Lớp triển khai interface đó phải cung cấp triển khai cho tất cả các thành viên của interface đó và các interface cơ sở.
+         *  
          *  - Nâng cao:
          *      + Indexers trong Interface, điều này cho phép các lớp triển khai có thể sử dụng cú pháp chỉ mục để truy xuất phần tử
          *      ```
@@ -59,6 +62,13 @@
                 }
                 ```
          * 
+         *      + abstract class vs interface
+         *          # abstract class: 
+         *              là class cha trong một cây object, tạo bộ khung, tạo các lớp con, dùng lại các chức năng trong abstract, trong đa số case bao gồm cả method đã implement và chưa implement
+         *              
+         *          
+         *          # interface
+         *              là bản cam kết những gì mà một đối tượng cần phải có
          */
         static void Main(string[] args)
         {
