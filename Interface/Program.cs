@@ -66,9 +66,14 @@
          *          # abstract class: 
          *              là class cha trong một cây object, tạo bộ khung, tạo các lớp con, dùng lại các chức năng trong abstract, trong đa số case bao gồm cả method đã implement và chưa implement
          *              
-         *          
          *          # interface
          *              là bản cam kết những gì mà một đối tượng cần phải có
+         *              
+         *      + Explicit implementation (triển khai rõ ràng):
+         *          # kỹ thuật sử dụng khi bạn muốn triển khai một phương thức từ interface trong lớp nhưng không muốn các phương thức đó có thể được truy cập trực tiếp qua đối tượng lớp
+         *          Thay vào đó, chúng chỉ có thể được gọi thông qua kiểu interface mà lớp triển khai. 
+         *          Điều này rất hữu ích khi bạn muốn tránh xung đột tên hoặc khi bạn muốn kiểm soát quyền truy cập vào các thành viên interface trong lớp của mình.
+         *      
          */
         static void Main(string[] args)
         {
@@ -94,6 +99,21 @@
 
             // Truy xuất một phần tử cụ thể từ ma trận
             Console.WriteLine("\nElement at position (1,1): " + matrix[1, 1]);  // Output: 5
+
+            Console.WriteLine("========Animal interface inheritance=========");
+
+            // Khởi tạo đối tượng Dog
+            Dog dog = new Dog();
+
+            // Gọi phương thức Speak thông qua lớp cơ sở
+            dog.Speak(); //out: Dog make a soud
+
+            // Gọi phương thức Speak thông qua interface IAnimal (explicit implementation)
+            IAnimal animal = dog;
+            animal.Speak(); // out: Dog barks
+
+            // Gọi phương thức Feed
+            dog.Feed(); //out: Dog is being fed
         }
     }
 }
