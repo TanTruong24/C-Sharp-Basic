@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NFind_Myself.Core
 {
-    class ExtractParams
+    public class ExtractParams
     {
         public static readonly string[] ExtFiles = { ".txt", ".md", ".log" };
         public const string PatternKeyword = "\"{1,}(.*?[^\"\\s])\"{1,}";

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NFind_Myself.Models
 {
-    class FileData
+    public class FileData
     {
         public string FilePath { get; set; }
         public string[] Lines { get; set; }

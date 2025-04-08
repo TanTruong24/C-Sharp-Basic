@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace NFind_Myself.Core
 {
-    class ReadFiles
+    public class ReadFiles
     {
-        private static FileData ReadFile(string path)
+        public static FileData ReadFile(string path)
         {
             if (!File.Exists(path))
             {
