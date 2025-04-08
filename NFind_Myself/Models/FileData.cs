@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NFind_Myself
+namespace NFind_Myself.Models
 {
     class FileData
     {

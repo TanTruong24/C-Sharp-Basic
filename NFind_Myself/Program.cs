@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using NFind_Myself.Core;
 using NFind_Myself.Extensions;
+using NFind_Myself.Models;
 
 namespace NFind_Myself
 {

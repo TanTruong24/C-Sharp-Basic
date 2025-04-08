@@ -1,11 +1,12 @@
-﻿using System;
+﻿using NFind_Myself.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace NFind_Myself
+namespace NFind_Myself.Core
 {
     class ReadFiles
     {

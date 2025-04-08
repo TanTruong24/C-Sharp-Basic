@@ -7,8 +7,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Unittest_NFind\Unittest_NFind.csproj" />
-  </ItemGroup>
-
 </Project>

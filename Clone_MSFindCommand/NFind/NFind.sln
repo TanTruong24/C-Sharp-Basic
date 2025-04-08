@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFind", "NFind.csproj", "{5E5C8CA3-073C-4352-9462-B3D6EBE105D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFind_Myself", "..\NFind_Myself\NFind_Myself.csproj", "{97B6488D-D6DD-4310-8CA1-BA985A4EC535}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E5C8CA3-073C-4352-9462-B3D6EBE105D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E5C8CA3-073C-4352-9462-B3D6EBE105D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E5C8CA3-073C-4352-9462-B3D6EBE105D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E5C8CA3-073C-4352-9462-B3D6EBE105D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97B6488D-D6DD-4310-8CA1-BA985A4EC535}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97B6488D-D6DD-4310-8CA1-BA985A4EC535}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97B6488D-D6DD-4310-8CA1-BA985A4EC535}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97B6488D-D6DD-4310-8CA1-BA985A4EC535}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {84F33780-8F6C-409B-98A5-1CD6A732A0DD}
+	EndGlobalSection
+EndGlobal
