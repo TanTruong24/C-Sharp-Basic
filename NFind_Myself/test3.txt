@@ -1,7 +1,0 @@
-FE react
-backend nodejs
-"BackEnd" PhP
-Laravel
-TheTan
-Vina
-TakeuchI
