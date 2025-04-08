@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NFind_Myself.Extensions;
 
 namespace NFind_Myself
 {
@@ -16,99 +17,84 @@ namespace NFind_Myself
 
             try
             {
-                Dictionary<string, string[]> infoFiles = ReadFiles.ReaderManyFiles(ExtractParams.ExtractFileNames(input));
-
-                List<string> options = ExtractParams.ExtractOptions(input);
-
-                string keyword = ExtractParams.ExtractKeyword(input);
+                var (infoFiles, optionFlags, keyword) = ProcessInput(input);
 
                 Dictionary<string, List<string>> results = new Dictionary<string, List<string>>();
 
                 foreach (var item in infoFiles)
                 {
-                    results.Add(item.Key, ApplyOptions(options, keyword, item.Value));
+                    results.Add(item.Key, FilterByOptions(optionFlags, keyword, item.Value.Lines));
                 }
 
-                foreach (var item in results)
-                {
-                    Console.WriteLine($"{item.Key}");
-                    if (HasCount(options))
-                    {
-                        Console.WriteLine($"Count: {item.Value.Count()}");
-                    }
-                    else
-                    {
-                        foreach (var line in item.Value)
-                        {
-                            Console.WriteLine($"{line}");
-                        }
-                    }
-
-                }
-
-
+                Print(results, optionFlags);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine("Error: " + ex.Message);
             }
-
         }
 
-        public static List<string> ApplyOptions(List<string> opts, string keyword, string[] linesValue)
+        private static (Dictionary<string, FileData> infoFiles, Dictionary<string, bool> optionFlags, string keyword) ProcessInput(string input)
         {
-            List<string> constainKeywords = new List<string>();
-            List<string> exceptKeywords = new List<string>();
-            List<string> res = new List<string>();
+            var infoFiles = ReadFiles.ReaderManyFiles(ExtractParams.ExtractFileNames(input));
+            var options = ExtractParams.ExtractOptions(input);
+            var keyword = ExtractParams.ExtractKeyword(input);
+            return (infoFiles, options, keyword);
+        }
 
-            bool hasLineNumer = HasLineNumber(opts);
-            for (int i = 0; i < linesValue.Length; i++)
+        private static void Print(Dictionary<string, List<string>> results, Dictionary<string, bool> opts)
+        {
+            foreach (var item in results)
             {
-                string lineNumber = hasLineNumer ? $"[{i + 1}]: " : "";
-                if (ExistKeyword(opts, keyword, linesValue[i]))
+                Console.WriteLine($"{item.Key}");
+                if (opts.GetFlag("\\c"))
                 {
-                    constainKeywords.Add($"{lineNumber}{linesValue[i]}");
+                    Console.WriteLine($"Count: {item.Value.Count()}");
                 }
                 else
                 {
-                    exceptKeywords.Add($"{lineNumber}{linesValue[i]}");
+                    foreach (var line in item.Value)
+                    {
+                        Console.WriteLine($"{line}");
+                    }
                 }
             }
-
-            res = HasExceptKeyword(opts) ? exceptKeywords : constainKeywords;
-            return res;
         }
 
-        private static bool ExistKeyword(List<string> opts, string keyword, string line)
+        public static List<string> FilterByOptions(Dictionary<string, bool> opts, string keyword, string[] linesValue)
         {
-            return HasCaseInsensitive(opts)
+            List<string> result = new();
+
+            bool hasLineNumber = opts.GetFlag("\\n");
+            bool ignoreCase = opts.GetFlag("\\i");
+            bool exceptMode = opts.GetFlag("\\v");
+
+            for (int i = 0; i < linesValue.Length; i++)
+            {
+                string line = linesValue[i];
+
+                if (string.IsNullOrEmpty(line)) continue;
+
+                // Lambda kiểm tra keyword có xuất hiện trong dòng hay không
+                Func<string, bool> matchFunc = line => IsMatch(line, keyword, ignoreCase);
+
+                // Lambda lọc final: nếu đang ở chế độ loại trừ thì phủ định matchFunc
+                Func<string, bool> filter = line => exceptMode ? !matchFunc(line) : matchFunc(line);
+
+                if (filter(line))
+                {
+                    string prefix = hasLineNumber ? $"[{i + 1}]: " : "";
+                    result.Add($"{prefix}{line}");
+                }
+            }
+            return result;
+        }
+
+        private static bool IsMatch(string line, string keyword, bool ignoreCase)
+        {
+            return ignoreCase
                 ? line.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0
                 : line.Contains(keyword);
-        }
-
-
-        private static bool HasCaseInsensitive(List<string> opts)
-        {
-            var match = opts.FirstOrDefault(item => item.Contains("\\i"));
-            return match != null;
-        }
-
-        private static bool HasLineNumber(List<string> opts)
-        {
-            var match = opts.FirstOrDefault(item => item.Contains("\\n"));
-            return match != null;
-        }
-
-        private static bool HasExceptKeyword(List<string> opts)
-        {
-            var match = opts.FirstOrDefault(item => item.Contains("\\v"));
-            return match != null;
-        }
-
-        private static bool HasCount(List<string> opts)
-        {
-            var match = opts.FirstOrDefault(item => item.Contains("\\c"));
-            return match != null;
         }
     }
 }

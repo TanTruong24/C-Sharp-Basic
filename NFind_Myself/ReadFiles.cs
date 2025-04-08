@@ -9,30 +9,33 @@ namespace NFind_Myself
 {
     class ReadFiles
     {
-        private static bool EnsureFileExist(string filename)
+        private static FileData ReadFile(string path)
         {
-            if (!File.Exists(filename))
+            if (!File.Exists(path))
             {
-                Console.WriteLine($"{filename} not exist!");
-                return false;
+                throw new FileNotFoundException($"File {path} not exsit.");
             }
-            return true;
-        }
-
-        public static string[]? Reader(string path)
-        {
-            return EnsureFileExist(path) ? File.ReadAllLines(path) : null;
-        }
-
-        public static Dictionary<string, string[]> ReaderManyFiles(List<string> files)
-        {
-            Dictionary<string, string[]> results = new Dictionary<string, string[]>();
-            foreach (var file in files)
+            string[] lines = File.ReadAllLines(path);
+            return new FileData
             {
-                string[]? resultReader = Reader(file);
-                if (resultReader != null)
+                FilePath = path,
+                Lines = lines,
+                Encoding = Encoding.UTF8
+            };
+        }
+
+        public static Dictionary<string, FileData> ReaderManyFiles(List<string> filePaths)
+        {
+            Dictionary<string, FileData> results = new Dictionary<string, FileData>();
+            foreach (var path in filePaths)
+            {
+                try
                 {
-                    results.Add(file, resultReader);
+                    results.Add(path, ReadFile(path));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unable to read file {path}: {ex.Message}");
                 }
             }
             return results;
