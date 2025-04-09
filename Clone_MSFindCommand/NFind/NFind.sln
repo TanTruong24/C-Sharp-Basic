@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFind_Myself", "..\NFind_My
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFind_Myself.Tests", "..\NFind_Myself.Tests\NFind_Myself.Tests.csproj", "{4BC2B228-57EA-4B09-B9EB-80E40D0242F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFindTests", "..\NFindTests\NFindTests.csproj", "{ECA0446D-F17F-4F93-950F-74D40A220F4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{4BC2B228-57EA-4B09-B9EB-80E40D0242F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BC2B228-57EA-4B09-B9EB-80E40D0242F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BC2B228-57EA-4B09-B9EB-80E40D0242F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECA0446D-F17F-4F93-950F-74D40A220F4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECA0446D-F17F-4F93-950F-74D40A220F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECA0446D-F17F-4F93-950F-74D40A220F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECA0446D-F17F-4F93-950F-74D40A220F4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
