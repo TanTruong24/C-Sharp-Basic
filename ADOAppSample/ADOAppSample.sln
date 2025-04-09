@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADOAppSample", "ADOAppSample\ADOAppSample.csproj", "{4D3F73CB-ED3B-405B-9B71-6854C28BFEB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADOAppSampleTests", "ADOAppSampleTests\ADOAppSampleTests.csproj", "{99DCF71B-2239-4A10-AB1B-920C2E34F15B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D3F73CB-ED3B-405B-9B71-6854C28BFEB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D3F73CB-ED3B-405B-9B71-6854C28BFEB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D3F73CB-ED3B-405B-9B71-6854C28BFEB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D3F73CB-ED3B-405B-9B71-6854C28BFEB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99DCF71B-2239-4A10-AB1B-920C2E34F15B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99DCF71B-2239-4A10-AB1B-920C2E34F15B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99DCF71B-2239-4A10-AB1B-920C2E34F15B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99DCF71B-2239-4A10-AB1B-920C2E34F15B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {77534589-E554-4E78-A225-A429051B6137}
+	EndGlobalSection
+EndGlobal
