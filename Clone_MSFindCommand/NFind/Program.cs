@@ -1,7 +1,13 @@
-﻿namespace NFind
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+namespace NFind
 {
     public class Program
     {
+        public const string PatternKeyword = "\"{1,}(.*?[^\"\\s])\"{1,}";
+
         static void Main(string[] args)
         {
             if (args.Length == 0)
@@ -14,17 +20,7 @@
 
             if (findOptions.HelpMode)
             {
-                Console.WriteLine(@"FIND [/V] [/C] [/N] [/I] [/OFF[LINE]] ""string"" [[drive:][path]filename[ ...]]
-
-                                  /V         Displays all lines NOT containing the specified string.
-                                  /C         Displays only the count of lines containing the string.
-                                  /N         Displays line numbers with the displayed lines.
-                                  /I         Ignores the case of characters when searching for the string.
-                                  /OFF[LINE] Do not skip files with offline attribute set.
-                                  ""string""   Specifies the text string to find.
-                                  [drive:][path]filename
-                                             Specifies a file or files to search."
-                );
+                PrintHelp();
                 return ;
             }
 
@@ -40,30 +36,38 @@
         {
             var stringComparison = findOptions.IsCaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
 
-            source = new FilteredLineSource(
-                source, 
-                (line) => findOptions.FindDontConstain ? !line.Text.Contains(findOptions.StringToFind, stringComparison) : line.Text.Contains(findOptions.StringToFind, stringComparison)
-             );
-
-            Console.WriteLine($"-------------{source.Name.ToUpper()}");
-
-            try
+            Func<Line, bool> filter = line =>
             {
-                source.Open();
-                var line = source.ReadLine();
+                bool contains = line.Text.Contains(findOptions.StringToFind, stringComparison);
+                return findOptions.FindDontConstain ? !contains : contains;
+            };
 
-                while (line != null)
+            
+
+            if (findOptions.CountMode)
+            {
+                Console.Write($"-------------{source.Name.ToUpper()}");
+                Console.WriteLine($": {source.CountMatching(filter)}");
+            }
+            else
+            {
+                Console.WriteLine($"-------------{source.Name.ToUpper()}");
+                try
                 {
-                    Print(line, findOptions.ShowLineNumber);
+                    source = new FilteredLineSource(source, filter);
+                    source.Open();
 
-                    line = source.ReadLine();
+                    Line? line;
+                    while ((line = source.ReadLine()) != null)
+                    {
+                        Print(line, findOptions.ShowLineNumber);
+                    }
+                }
+                finally
+                {
+                    source.Close();
                 }
             }
-            finally
-            {
-                source.Close();
-            }
-
         }
 
         private static void Print(Line line, bool printLineNumber)
@@ -85,35 +89,26 @@
 
             foreach (var arg in args) 
             {
-                if (arg == "/v")
-                {
+                var lower = arg.ToLowerInvariant();
+                if (lower == "/v")
                     options.FindDontConstain = true;
-                }
-                else if (arg == "/c")
-                {
+                else if (lower == "/c")
                     options.CountMode = true;
-                }
-                else if (arg == "/n")
-                {
+                else if (lower == "/n")
                     options.ShowLineNumber = true;
-                }
-                else if (arg == "/i")
-                {
+                else if (lower == "/i")
                     options.IsCaseSensitive = false;
-                }
-                else if(arg == "off" || arg == "offline")
-                {
+                else if (lower == "off" || lower == "offline")
                     options.SkipOffLineFiles = false;
-                }
-                else if (arg == "?")
-                {
+                else if (lower == "/?" || lower == "?")
                     options.HelpMode = true;
-                }
                 else
                 {
-                    if (string.IsNullOrEmpty(options.StringToFind))
+                    var match = Regex.Match(arg, PatternKeyword);
+
+                    if (match.Success && string.IsNullOrEmpty(options.StringToFind))
                     {
-                        options.StringToFind = arg;
+                        options.StringToFind = match.Groups[1].Value;
                     }
                     else if (string.IsNullOrEmpty(options.Path))
                     {
@@ -121,11 +116,34 @@
                     }
                     else
                     {
+                        Console.WriteLine("FIND: Parameter format not correct");
                         throw new ArgumentException(arg);
                     }
                 }
             }
+            if (string.IsNullOrEmpty(options.StringToFind) && !options.HelpMode)
+            {
+                Console.WriteLine("FIND: Missing search string in double quotes.");
+                throw new ArgumentException("Missing keyword in format: \"your text\"");
+            }
+
             return options;
+        }
+
+        private static void PrintHelp()
+        {
+            Console.WriteLine(
+            @"FIND [/V] [/C] [/N] [/I] [/OFF[LINE]] ""string"" [[drive:][path]filename[ ...]]
+
+              /V         Displays all lines NOT containing the specified string.
+              /C         Displays only the count of lines containing the string.
+              /N         Displays line numbers with the displayed lines.
+              /I         Ignores the case of characters when searching for the string.
+              /OFF[LINE] Do not skip files with offline attribute set.
+              ""string""   Specifies the text string to find.
+              [drive:][path]filename
+                         Specifies a file or files to search."
+            );
         }
     }
 }

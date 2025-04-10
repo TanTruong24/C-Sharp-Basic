@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace NFind
 {
-    internal interface ILineSource
+    public interface ILineSource
     {
         string Name { get; }
+
         Line? ReadLine();
 
         void Open();

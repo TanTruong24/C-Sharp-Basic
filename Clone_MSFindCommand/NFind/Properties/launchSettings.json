@@ -2,7 +2,7 @@
   "profiles": {
     "NFind": {
       "commandName": "Project",
-      "commandLineArgs": "backend *.txt /v /i /n"
+      "commandLineArgs": "/n /v /i /c *.txt \\\"backend\\\""
     }
   }
 }
