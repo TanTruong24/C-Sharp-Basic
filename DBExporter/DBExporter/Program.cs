@@ -1,9 +1,10 @@
-﻿using DatabaseConnection;
+﻿using System;
 using System.Data.Common;
-using DBExporterOptions;
 using Microsoft.Data.SqlClient;
-using ExportEngine;
 
+using DBConnection;
+using DBExportOptions;
+using DBExportEngine;
 
 namespace DBExporter
 {
@@ -11,74 +12,93 @@ namespace DBExporter
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            if (args.Length == 0)
+            {
+                ShowUsage();
+                return;
+            }
+
+            Console.WriteLine("Parsing export options...");
 
             var options = FindOptions(args);
-
             if (options == null) return;
 
-            using var conn = DatabaseConnection(options);
-
-            conn.Open();
-
-            //Display(conn, options);
-
-            var data = DataUtils.QueryToList(conn, options.FinalQuery);
-
-            var service = new ExportService();
-
-            var path = service.Export(data, options.Format, options.OutputFile, options.Zip);
-
-            Console.WriteLine($"Exported to: {path}");
-
-
-        }
-
-        private static void Display(DbConnection conn, ExportOptions options)
-        {
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = options.QueryOrTable ?? "";
-
-            using var reader = cmd.ExecuteReader();
-
-            var colCount = reader.FieldCount;
-            while (reader.Read())
+            try
             {
-                for (int i = 0; i < 3; i++)
+                using var connection = CreateDatabaseConnection(options);
+                connection.Open();
+                Console.WriteLine("Database connection established.");
+
+                var data = DataUtils.QueryToList(connection, options.FinalQuery);
+                Console.WriteLine($"Retrieved {data.Count} rows.");
+
+                var exportService = new ExportService();
+                var path = exportService.Export(data, options.Format, options.OutputFile, options.GetTableName());
+
+                if (string.IsNullOrWhiteSpace(path))
                 {
-                    Console.Write($"{reader.GetName(i)}: {reader[i]}  ");
+                    Console.WriteLine("[ERROR] Export failed or returned an empty path.");
                 }
-                Console.WriteLine();
+                else
+                {
+                    Console.WriteLine($"Export completed successfully. File saved at: {path}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] {ex.GetType().Name}: {ex.Message}");
             }
         }
 
-        public static ExportOptions? FindOptions(string[] args)
+        private static ExportOptions? FindOptions(string[] args)
         {
             try
             {
                 var factory = new ExporterFactory();
                 var parser = new ExportOptionsParser();
                 var options = parser.Parse(args);
-                options.Validate(factory);
 
+                options.Validate(factory);
                 return options;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"[ERROR] Failed to parse options: {ex.GetType().Name}: {ex.Message}");
+                return null;
             }
-            return null;
         }
 
-        static DbConnection DatabaseConnection(ExportOptions options)
+        private static DbConnection CreateDatabaseConnection(ExportOptions options)
         {
             var factoryProvider = new DbConnectionFactoryProvider();
-
             var builder = new DatabaseConnectionBuilder(factoryProvider);
 
-            DbConnection connection = builder.SetProvider("SqlServer").SetConnectionString(options.ConnectionString).Build();
-
-            return connection;
+            return builder
+                .SetProvider("SqlServer")
+                .SetConnectionString(options.ConnectionString)
+                .Build();
         }
+
+        private static void ShowUsage()
+        {
+            Console.WriteLine(@"
+                Usage:
+                  exporter --connStr=""<connection_string>"" --query=""<SELECT statement or table name>"" [--outputFile=""<filename>""] [--format=""csv|sql""] [--zip true|false] [--addTimestamp=true|false]
+
+                Required:
+                  --connStr       Database connection string.
+                  --query         SELECT statement or table name to export.
+
+                Optional:
+                  --outputFile    Output filename (default: table name or 'export').
+                  --format        Export format: 'csv' (default) or 'sql'.
+                  --zip           Compress output into .zip (default: false).
+                  --addTimestamp     Append current date/time to filename (default: false).
+
+                Example:
+                  exporter --connStr=""Server=.;Database=MyDB;Trusted_Connection=True;"" --query=""employeess"" --format=csv --zip=true --addTimestamp=true
+                ");
+        }
+
     }
 }
