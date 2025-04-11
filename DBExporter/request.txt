@@ -1,0 +1,20 @@
+﻿Yêu cầu:
+
+Viết chương trình kết nối với cơ sở dữ liệu và xuất ra một file với định dạng CSV hoặc SQL, chương trình nhận vào 3 tham số:
+
+Chuỗi connectionString.
+
+Tên file chứa dữ liệu xuất ra (mặc nhiên là tên table hoặc export nếu dữ liệu lấy từ câu lệnh SELECT).
+
+Câu lệnh SELECT hoặc tên TABLE để lấy dữ liệu.
+
+Ngoài ra có thể có thêm các tham số tùy chọn:
+
+Định dạng muốn xuất ra (CSV (mặc nhiên) hoặc SQL).
+
+Có nén file đích hay không (dùng định dạng zip) (mặc nhiên là không).
+
+Nối thêm ngày giờ xuất dữ liệu vào tên file.
+
+Chương trình cần được thiết kế sao cho có thể sửa đổi hoặc nâng cấp dễ dàng sau này.
+
