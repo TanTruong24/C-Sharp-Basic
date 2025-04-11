@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DBExportUtils;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -14,10 +15,10 @@ namespace DBExportOptions
         public bool AddTimestamp { get; set; } = false;
         public string FinalQuery { get; private set; }
 
-        public void Validate(ExporterFactory factory)
+        public void Validate()
         {
             ValidateRequiredFields();
-            NormalizeFormat(factory);
+            NormalizeFormat();
             BuildFinalQuery();
             ResolveOutputFilePath();
         }
@@ -31,12 +32,14 @@ namespace DBExportOptions
                 throw new ArgumentException("Query or Table is required (--query=...)");
         }
 
-        private void NormalizeFormat(ExporterFactory factory)
+        private void NormalizeFormat()
         {
             Format = Format?.Trim().ToLower() ?? "csv";
 
-            if (!factory.IsSupported(Format))
+            if (!ExportMetadata.IsSupported(Format))
+            {
                 throw new ArgumentException($"Unsupported format: {Format}");
+            }
         }
 
         private void BuildFinalQuery()

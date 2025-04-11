@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using DBConnection;
 using DBExportOptions;
 using DBExportEngine;
+using DBExportUtils;
 
 namespace DBExporter
 {
@@ -54,11 +55,9 @@ namespace DBExporter
         {
             try
             {
-                var factory = new ExporterFactory();
                 var parser = new ExportOptionsParser();
                 var options = parser.Parse(args);
-
-                options.Validate(factory);
+                options.Validate();
                 return options;
             }
             catch (Exception ex)

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DBExporter
+namespace DBExportUtils
 {
     public static class DataUtils
     {
