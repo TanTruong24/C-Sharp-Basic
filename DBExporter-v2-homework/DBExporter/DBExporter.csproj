@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>dbexporter</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DBExporter.DatabaseBuilder\DBExporter.DatabaseBuilder.csproj" />
+    <ProjectReference Include="..\DBExporter.DatabaseObjects\DBExporter.DatabaseObjects.csproj" />
+    <ProjectReference Include="..\DBExporter.DatabaseWriter\DBExporter.DatabaseWriter.csproj" />
+    <ProjectReference Include="..\DBExporter.Options\DBExporter.Options.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ResultExports\" />
+  </ItemGroup>
+
+</Project>

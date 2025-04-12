@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DBExporter": {
+      "commandName": "Project",
+      "commandLineArgs": "--connStr=\"Server=.\\SQLEXPRESS;Database=HR;Trusted_Connection=True;TrustServerCertificate=True;\" --query=\"countries\"  --server=SqlServer --filePath=\"../../../ResultExports\" --format=sql --adt"
+    }
+  }
+}
