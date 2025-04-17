@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RepositorySample.Repository
 {
-    class OrderRepository : IOrderRepository
+    public class OrderRepository : IOrderRepository
     {
         private readonly IOrderStorage _storage;
 
