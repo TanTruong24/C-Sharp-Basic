@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace RepositorySample.Entities
 {
-    class Order
+    public class Order
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
-        public Guid CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
         public required string OrderReference { get; set; }
 

@@ -12,9 +12,9 @@ namespace RepositorySample.Repository
     {
         public void AddItem(OrderItem item);
 
-        public void GetAll();
+        public List<Order> Filter();
 
-        public void GetById(Guid OrderId);
+        public void GetById(int OrderId);
 
         public void Update(UpdateOrderParams Params);
 
