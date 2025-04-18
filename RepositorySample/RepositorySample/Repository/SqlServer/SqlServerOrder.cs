@@ -15,9 +15,7 @@ namespace RepositorySample.Repository.SqlServer
 
         Dictionary<string, string> Commands = new()
         {
-            { "GetAll", "SELECT * FROM orders"},
-            { "GetById", "SELECT * FROM orders WHERE id={orderId}" },
-            { "Delete", "DELETE FROM orders WHERE id={orderId}"}
+            { "filter", "SELECT * FROM orders"},
         };
 
         public SqlServerOrder (IConfiguration config)
@@ -25,10 +23,6 @@ namespace RepositorySample.Repository.SqlServer
             _connectionString = config.GetConnectionString("SqlServer");
         }
 
-        public void Add(Order order)
-        {
-            throw new NotImplementedException();
-        }
 
         public IEnumerable<Order> Filter()
         {
@@ -36,7 +30,7 @@ namespace RepositorySample.Repository.SqlServer
 
             using var conn = new SqlConnection(_connectionString);
             conn.Open();
-            using var cmd = new SqlCommand(Commands["GetAll"], conn);
+            using var cmd = new SqlCommand(Commands["filter"], conn);
             using var reader = cmd.ExecuteReader();
 
             while (reader.Read())
@@ -49,6 +43,52 @@ namespace RepositorySample.Repository.SqlServer
                 });
             }
             return orders;
+        }
+
+        public void Create(Order order)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            conn.Open();
+            using var transaction = conn.BeginTransaction();
+
+            try
+            {
+                var insertOrderCmd = new SqlCommand(@"
+                INSERT INTO orders (id, customer_id, order_reference)
+                VALUE (@Id, @CustomerId, @OrderReference)",
+                conn, transaction);
+
+                insertOrderCmd.Parameters.AddWithValue("@Id", order.Id);
+                insertOrderCmd.Parameters.AddWithValue("@CustomerId", order.CustomerId);
+                insertOrderCmd.Parameters.AddWithValue("@OrderReference", order.OrderReference);
+                insertOrderCmd.ExecuteNonQuery();
+
+                AddItems(order.Items, order.Id, conn, transaction);
+
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+
+        public void AddItems(List<OrderItem> items, int orderId, SqlConnection conn, SqlTransaction transaction)
+        {
+            foreach (var item in items)
+            {
+                var cmd = new SqlCommand(@"
+                INSERT INTO orders_items (id, order_id, product_id, quantity, price)
+                VALUES (@Id, @OrderId, @ProductId, @Quantity, @Price)", conn, transaction);
+
+                cmd.Parameters.AddWithValue("@Id", Guid.NewGuid().GetHashCode());
+                cmd.Parameters.AddWithValue("@OrderId", orderId);
+                cmd.Parameters.AddWithValue("@ProductId", item.ProductId);
+                cmd.Parameters.AddWithValue("@Quantity", item.Quantity);
+                cmd.Parameters.AddWithValue("@Price", item.Price);
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }

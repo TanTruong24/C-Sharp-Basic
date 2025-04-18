@@ -1,4 +1,5 @@
-﻿using RepositorySample.Entities;
+﻿using Microsoft.Data.SqlClient;
+using RepositorySample.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace RepositorySample.Repository.SqlServer
     {
         IEnumerable<Order> Filter();
 
-        void Add(Order order);
+        void Create(Order order);
+
+        void AddItems(List<OrderItem> items, int orderId, SqlConnection conn, SqlTransaction transaction);
     }
 }
