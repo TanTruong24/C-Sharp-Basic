@@ -20,7 +20,7 @@ CREATE TABLE products (
 CREATE TABLE orders (
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	customer_id INT NOT NULL FOREIGN KEY REFERENCES customers(id),
-	order_reference NVARCHAR (20) NOT NULL,
+	order_reference NVARCHAR (100) NOT NULL,
 
 	CONSTRAINT unqOrderReference UNIQUE (order_reference)
 )
@@ -32,3 +32,6 @@ CREATE TABLE orders_items (
 	quantity INT NOT NULL,
 	price FLOAT NOT NULL
 );
+
+INSERT customers (name, user_id) VALUES ('Truong Tan', 1), ('Anh Thu', 2);
+INSERT products (name, price, remain_quantity) VALUES ('Laptop', 2000000, 4), ('Sirius', 30000000, 40);

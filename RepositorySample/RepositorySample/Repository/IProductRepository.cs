@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.VisualBasic.FileIO;
 using RepositorySample.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RepositorySample.Repository
 {
-    interface IProductRepository
+    public interface IProductRepository
     {
         public void Create(Product product);
 
@@ -18,6 +19,8 @@ namespace RepositorySample.Repository
 
         public Array Filter();
 
-        public bool ReduceQuantity(int productId);
+        public void ReduceQuantity(int productId, int quantityToReduct, SqlConnection conn, SqlTransaction transaction);
+
+        public decimal GetPriceById(int productId, SqlConnection conn, SqlTransaction transaction);
     }
 }

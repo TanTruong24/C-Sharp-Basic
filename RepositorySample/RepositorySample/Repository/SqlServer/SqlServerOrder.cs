@@ -11,6 +11,8 @@ namespace RepositorySample.Repository.SqlServer
 {
     public class SqlServerOrder : IOrderStorage
     {
+        private readonly IProductRepository _productRepository;
+
         private readonly string _connectionString;
 
         Dictionary<string, string> Commands = new()
@@ -18,11 +20,11 @@ namespace RepositorySample.Repository.SqlServer
             { "filter", "SELECT * FROM orders"},
         };
 
-        public SqlServerOrder (IConfiguration config)
+        public SqlServerOrder (IConfiguration config, IProductRepository productRepository)
         {
             _connectionString = config.GetConnectionString("ShopDB");
+            _productRepository = productRepository;
         }
-
 
         public IEnumerable<Order> Filter()
         {
@@ -55,12 +57,15 @@ namespace RepositorySample.Repository.SqlServer
             {
                 var insertOrderCmd = new SqlCommand(@"
                 INSERT INTO orders (customer_id, order_reference)
-                VALUES (@CustomerId, @OrderReference)",
+                VALUES (@CustomerId, @OrderReference);
+                SELECT CAST(SCOPE_IDENTITY() as int);",
                 conn, transaction);
 
                 insertOrderCmd.Parameters.AddWithValue("@CustomerId", order.CustomerId);
                 insertOrderCmd.Parameters.AddWithValue("@OrderReference", order.OrderReference);
-                insertOrderCmd.ExecuteNonQuery();
+
+                // Lấy ID mới từ DB
+                order.Id = (int)insertOrderCmd.ExecuteScalar();
 
                 AddItems(order.Items, order.Id, conn, transaction);
 
@@ -77,16 +82,22 @@ namespace RepositorySample.Repository.SqlServer
         {
             foreach (var item in items)
             {
-                var cmd = new SqlCommand(@"
-                INSERT INTO orders_items (id, order_id, product_id, quantity, price)
-                VALUES (@Id, @OrderId, @ProductId, @Quantity, @Price)", conn, transaction);
 
-                cmd.Parameters.AddWithValue("@Id", Guid.NewGuid().GetHashCode());
+                var unitPrice = _productRepository.GetPriceById(item.ProductId, conn, transaction);
+                var totalPrice = unitPrice * item.Quantity;
+
+
+                var cmd = new SqlCommand(@"
+                INSERT INTO orders_items (order_id, product_id, quantity, price)
+                VALUES (@OrderId, @ProductId, @Quantity, @Price)", conn, transaction);
+
                 cmd.Parameters.AddWithValue("@OrderId", orderId);
                 cmd.Parameters.AddWithValue("@ProductId", item.ProductId);
                 cmd.Parameters.AddWithValue("@Quantity", item.Quantity);
-                cmd.Parameters.AddWithValue("@Price", item.Price);
+                cmd.Parameters.AddWithValue("@Price", totalPrice);
                 cmd.ExecuteNonQuery();
+
+                _productRepository.ReduceQuantity(item.ProductId, item.Quantity, conn, transaction);
             }
         }
     }

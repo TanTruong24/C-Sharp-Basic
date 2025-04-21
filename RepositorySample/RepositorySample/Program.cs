@@ -6,6 +6,7 @@ using RepositorySample.Repository.SqlServer;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Identity.Client.Extensions.Msal;
 
 namespace RepositorySample
 {
@@ -23,16 +24,26 @@ namespace RepositorySample
 
             // B2: Đọc type và khởi tạo storage phù hợp
             var repoType = configuration["RepositorySettings:Type"];
+
+            var storage = GetStorageByConfig(repoType, configuration);
+
+            CreateOrderExample(storage);
+
+        }
+
+        static IOrderStorage GetStorageByConfig(string? repoType, IConfiguration configuration)
+        {
             IOrderStorage storage;
+            IProductRepository productRepository = new ProductRepository();
 
             if (repoType == "SqlServer")
             {
-                storage = new SqlServerOrder(configuration);
+                storage = new SqlServerOrder(configuration, productRepository);
                 Console.WriteLine("Use SQL Server Storage.");
             }
             else if (repoType == "InMemory")
             {
-                storage = new SqlServerOrder(configuration);
+                storage = new SqlServerOrder(configuration, productRepository);
                 Console.WriteLine("Use In-Memory Storage.");
             }
             else
@@ -40,17 +51,23 @@ namespace RepositorySample
                 throw new Exception("Config 'RepositorySettings:Type' invalid.");
             }
 
+            return storage;
+        }
+
+        static void CreateOrderExample(IOrderStorage storage) 
+        {
             // B3: Dùng qua Repository pattern
             var repository = new OrderRepository(storage);
 
             var newOrder = new CreateOrderParams
             {
                 CustomerId = 1,
-                OrderReference = "ORD-DEMO",
+                OrderReference = $"YAMAHA-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}",
                 Items = new List<OrderItem>
                 {
-                    new OrderItem { ProductId = 301, Quantity = 1, Price = 10000 }
+                    new OrderItem { ProductId = 2, Quantity = 5}
                 }
+
             };
 
             repository.Create(newOrder);

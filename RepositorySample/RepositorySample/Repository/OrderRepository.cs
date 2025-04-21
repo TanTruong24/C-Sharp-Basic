@@ -27,7 +27,6 @@ namespace RepositorySample.Repository
         {
             var order = new Order
             {
-                Id = Params.Id,
                 CustomerId = Params.CustomerId,
                 OrderReference = Params.OrderReference,
                 Items = Params.Items
