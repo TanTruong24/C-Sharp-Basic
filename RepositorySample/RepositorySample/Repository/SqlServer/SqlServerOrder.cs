@@ -20,7 +20,7 @@ namespace RepositorySample.Repository.SqlServer
 
         public SqlServerOrder (IConfiguration config)
         {
-            _connectionString = config.GetConnectionString("SqlServer");
+            _connectionString = config.GetConnectionString("ShopDB");
         }
 
 
@@ -38,7 +38,7 @@ namespace RepositorySample.Repository.SqlServer
                 orders.Add(new Order
                 {
                     Id = (int) reader["id"],
-                    CustomerId = (int)reader["cutomer_id"],
+                    CustomerId = (int)reader["customer_id"],
                     OrderReference = (string)reader["order_reference"]
                 });
             }
@@ -54,11 +54,10 @@ namespace RepositorySample.Repository.SqlServer
             try
             {
                 var insertOrderCmd = new SqlCommand(@"
-                INSERT INTO orders (id, customer_id, order_reference)
-                VALUE (@Id, @CustomerId, @OrderReference)",
+                INSERT INTO orders (customer_id, order_reference)
+                VALUES (@CustomerId, @OrderReference)",
                 conn, transaction);
 
-                insertOrderCmd.Parameters.AddWithValue("@Id", order.Id);
                 insertOrderCmd.Parameters.AddWithValue("@CustomerId", order.CustomerId);
                 insertOrderCmd.Parameters.AddWithValue("@OrderReference", order.OrderReference);
                 insertOrderCmd.ExecuteNonQuery();

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RepositorySample.Dtos
+namespace RepositorySample.Params
 {
     public class UpdateOrderParams
     {

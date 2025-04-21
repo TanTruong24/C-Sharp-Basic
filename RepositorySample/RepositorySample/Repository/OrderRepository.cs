@@ -1,4 +1,4 @@
-﻿using RepositorySample.Dtos;
+﻿using RepositorySample.Params;
 using RepositorySample.Entities;
 using RepositorySample.Repository.SqlServer;
 using System;
@@ -25,7 +25,15 @@ namespace RepositorySample.Repository
 
         public void Create(CreateOrderParams Params)
         {
-            throw new NotImplementedException();
+            var order = new Order
+            {
+                Id = Params.Id,
+                CustomerId = Params.CustomerId,
+                OrderReference = Params.OrderReference,
+                Items = Params.Items
+            };
+
+            _storage.Create(order);
         }
 
         public List<Order> Filter()

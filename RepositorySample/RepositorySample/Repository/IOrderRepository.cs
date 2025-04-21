@@ -1,4 +1,4 @@
-﻿using RepositorySample.Dtos;
+﻿using RepositorySample.Params;
 using RepositorySample.Entities;
 using System;
 using System.Collections.Generic;
