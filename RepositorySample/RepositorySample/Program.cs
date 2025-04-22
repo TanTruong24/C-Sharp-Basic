@@ -28,6 +28,7 @@ namespace RepositorySample
             var storage = GetStorageByConfig(repoType, configuration);
 
             CreateOrderExample(storage);
+            FilterOrder(storage);
 
         }
 
@@ -73,6 +74,34 @@ namespace RepositorySample
             repository.Create(newOrder);
 
             var allOrders = repository.Filter();
+            foreach (var order in allOrders)
+            {
+                Console.WriteLine($"Order ID: {order.Id}, Ref: {order.OrderReference}");
+            }
+        }
+
+        static void FilterOrder(IOrderStorage storage)
+        {
+            Console.WriteLine("Input filter params: ");
+            Console.WriteLine("orderBy: ");
+            var orderBy = Console.ReadLine();
+
+            Console.WriteLine("orderDirection: ");
+            var orderDirection = Console.ReadLine();
+
+            Console.WriteLine("Query order reference: ");
+            var query = Console.ReadLine();
+            
+            var filterCriterias = new FilterOrderCriteria()
+            {
+                OrderBy = orderBy,
+                OrderDirection = orderDirection,
+                Query = query
+            };
+            var repository = new OrderRepository(storage);
+
+            var allOrders = repository.Filter(filterCriterias);
+
             foreach (var order in allOrders)
             {
                 Console.WriteLine($"Order ID: {order.Id}, Ref: {order.OrderReference}");

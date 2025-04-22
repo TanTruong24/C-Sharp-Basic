@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace RepositorySample.Repository
 {
@@ -18,9 +19,9 @@ namespace RepositorySample.Repository
             _storage = storage;
         }
 
-        public void AddItem(OrderItem item)
+        public void AddItem(OrderItem item, int orderId, SqlConnection conn, SqlTransaction transaction)
         {
-            throw new NotImplementedException();
+            _storage.AddItem(item, orderId, conn, transaction);
         }
 
         public void Create(CreateOrderParams Params)
@@ -35,9 +36,9 @@ namespace RepositorySample.Repository
             _storage.Create(order);
         }
 
-        public List<Order> Filter()
+        public List<Order> Filter(FilterOrderCriteria? Criterias = null)
         {
-            return _storage.Filter().ToList();
+            return _storage.Filter(Criterias).ToList();
         }
 
         public void GetById(int OrderId)
