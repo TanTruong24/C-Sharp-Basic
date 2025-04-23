@@ -35,8 +35,8 @@ namespace RepositorySample.Repository.SqlServer
             {
                 if (!string.IsNullOrEmpty(Criterias.Query))
                 {
-                    whereClauses.Add("OrderReference LIKE @query");
-                    parameters.Add(new SqlParameter("@query", $"%{Criterias.Query}"));
+                    whereClauses.Add("order_reference LIKE @query");
+                    parameters.Add(new SqlParameter("@query", $"%{Criterias.Query}%"));
                 }
 
                 if (whereClauses.Count > 0)
@@ -75,10 +75,13 @@ namespace RepositorySample.Repository.SqlServer
             return orders;
         }
 
+        string ToSnakeCase(string str) =>
+            string.Concat(str.Select((c, i) => i > 0 && char.IsUpper(c) ? "_" + char.ToLower(c) : char.ToLower(c).ToString()));
+
         private string GetSafeOrderByColumn(string? input)
         {
             var allowed = new HashSet<string> { "id", "customerId", "orderReference" };
-            return allowed.Contains(input ?? "") ? input! : "id";
+            return allowed.Contains(input ?? "") ? ToSnakeCase(input) : "id";
         }
 
         public void Create(Order order)

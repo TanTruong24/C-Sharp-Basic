@@ -83,13 +83,13 @@ namespace RepositorySample
         static void FilterOrder(IOrderStorage storage)
         {
             Console.WriteLine("Input filter params: ");
-            Console.WriteLine("orderBy: ");
+            Console.Write("orderBy: ");
             var orderBy = Console.ReadLine();
 
-            Console.WriteLine("orderDirection: ");
+            Console.Write("orderDirection: ");
             var orderDirection = Console.ReadLine();
 
-            Console.WriteLine("Query order reference: ");
+            Console.Write("Query order reference: ");
             var query = Console.ReadLine();
             
             var filterCriterias = new FilterOrderCriteria()
