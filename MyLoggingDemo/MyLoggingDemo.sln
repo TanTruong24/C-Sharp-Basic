@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLoggingDemo", "MyLoggingDemo\MyLoggingDemo.csproj", "{F57E0482-5CF6-4E97-B240-D00FDD2CD122}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderProcessorLogging", "OrderProcessorLogging\OrderProcessorLogging.csproj", "{275205A9-96F4-4AFD-B071-2F81BC0F111C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F57E0482-5CF6-4E97-B240-D00FDD2CD122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F57E0482-5CF6-4E97-B240-D00FDD2CD122}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F57E0482-5CF6-4E97-B240-D00FDD2CD122}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F57E0482-5CF6-4E97-B240-D00FDD2CD122}.Release|Any CPU.Build.0 = Release|Any CPU
+		{275205A9-96F4-4AFD-B071-2F81BC0F111C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{275205A9-96F4-4AFD-B071-2F81BC0F111C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{275205A9-96F4-4AFD-B071-2F81BC0F111C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{275205A9-96F4-4AFD-B071-2F81BC0F111C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {63A20634-A237-47D3-BB58-3750C4C3B4F5}
+	EndGlobalSection
+EndGlobal

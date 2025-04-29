@@ -1,0 +1,40 @@
+2025-04-29 15:48:36.194 +07:00 [INF] Start order processing...
+2025-04-29 15:48:36.233 +07:00 [DBG] Processing order 1
+2025-04-29 15:48:36.233 +07:00 [DBG] Processing order 1
+2025-04-29 15:48:36.233 +07:00 [DBG] Processing order 1
+2025-04-29 15:48:36.233 +07:00 [DBG] Processing order 1
+2025-04-29 15:48:36.233 +07:00 [DBG] Processing order 1
+2025-04-29 15:48:36.565 +07:00 [INF] Order 1 processed successfully
+2025-04-29 15:48:36.980 +07:00 [INF] Order 1 processed successfully
+2025-04-29 15:48:37.159 +07:00 [INF] Order 1 processed successfully
+2025-04-29 15:48:37.175 +07:00 [INF] Order 1 processed successfully
+2025-04-29 15:48:37.223 +07:00 [INF] Order 1 processed successfully
+2025-04-29 15:48:37.225 +07:00 [INF] Finished processing all orders.
+2025-04-29 15:55:26.825 +07:00 [INF] Start order processing...
+2025-04-29 15:55:26.871 +07:00 [DBG] Processing order 1
+2025-04-29 15:55:26.871 +07:00 [DBG] Processing order 5
+2025-04-29 15:55:26.871 +07:00 [DBG] Processing order 3
+2025-04-29 15:55:26.871 +07:00 [DBG] Processing order 4
+2025-04-29 15:55:26.871 +07:00 [DBG] Processing order 2
+2025-04-29 15:55:27.555 +07:00 [INF] Order 4 processed successfully
+2025-04-29 15:55:27.647 +07:00 [INF] Order 3 processed successfully
+2025-04-29 15:55:27.726 +07:00 [INF] Order 2 processed successfully
+2025-04-29 15:55:27.741 +07:00 [INF] Order 1 processed successfully
+2025-04-29 15:55:27.805 +07:00 [ERR] Error while processing order 5
+System.InvalidOperationException: Order 5 failed randomly
+   at OrderProcessorLogging.OrderProcessor.ProcessSingleOrder(Int32 orderId) in E:\eng\csharp\MyLoggingDemo\OrderProcessorLogging\OrderProcessor.cs:line 44
+2025-04-29 15:55:27.837 +07:00 [INF] Finished processing all orders.
+2025-04-29 16:02:14.245 +07:00 [INF] Start order processing...
+2025-04-29 16:02:14.289 +07:00 [DBG] Processing order 2
+2025-04-29 16:02:14.289 +07:00 [DBG] Processing order 5
+2025-04-29 16:02:14.289 +07:00 [DBG] Processing order 4
+2025-04-29 16:02:14.289 +07:00 [DBG] Processing order 1
+2025-04-29 16:02:14.289 +07:00 [DBG] Processing order 3
+2025-04-29 16:02:14.680 +07:00 [INF] Order 3 processed successfully
+2025-04-29 16:02:14.691 +07:00 [INF] Order 4 processed successfully
+2025-04-29 16:02:14.694 +07:00 [ERR] Error while processing order 2
+System.InvalidOperationException: Order 2 failed randomly
+   at OrderProcessorLogging.OrderProcessor.ProcessSingleOrder(Int32 orderId) in E:\eng\csharp\MyLoggingDemo\OrderProcessorLogging\OrderProcessor.cs:line 44
+2025-04-29 16:02:14.719 +07:00 [INF] Order 1 processed successfully
+2025-04-29 16:02:14.742 +07:00 [INF] Order 5 processed successfully
+2025-04-29 16:02:14.743 +07:00 [INF] Finished processing all orders.

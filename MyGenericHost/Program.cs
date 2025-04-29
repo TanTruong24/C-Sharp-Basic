@@ -1,4 +1,4 @@
-using MyGenericHost.Services;
+﻿using MyGenericHost.Services;
 using MyGenericHost;
 
 /*
@@ -28,21 +28,21 @@ host.Run();
 
 
 /*
- * Kh�ng d�ng DI
+ * Không dùng DI
  * 
     var services = new ServiceCollection();
 
-    // T? ??ng k� c�c service
+    // tự đăng ký các service
     services.AddSingleton<IEmailService, EmailService>();
     services.AddSingleton<Worker>();
 
-    // T? t?o container
+    // tự tạo container
     var provider = services.BuildServiceProvider();
 
-    // T? resolve service
+    // Tự resolve service
     var worker = provider.GetRequiredService<Worker>();
 
-    // G?i th? c�ng "main logic"
+    // gọi thành công "main logic"
     await worker.Run();
 *
 */
