@@ -2,19 +2,21 @@
 using CachingSample.Models;
 using InMemoryCaching.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace CachingSample.Services
 {
     public class ProductService : IProductService
     {
         private readonly AppDbContext _context;
-        private readonly IMemoryCache _cache;
-        private const string ProductCacheKey = "products_cache";
+        private readonly IDistributedCache _cache;
         private readonly ILogger<ProductService> _logger;
+        private const string ProductCacheKey = "products_cache";
 
-        public ProductService(AppDbContext context, IMemoryCache cache, ILogger<ProductService> logger)
+        public ProductService(AppDbContext context, IDistributedCache cache, ILogger<ProductService> logger)
         {
             _context = context;
             _cache = cache;
@@ -26,23 +28,32 @@ namespace CachingSample.Services
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            List<Product>? products;
+            List<Product>? products = null;
             bool fromCache = true;
 
-            if (!_cache.TryGetValue(ProductCacheKey, out products))
+            var cached = await _cache.GetStringAsync(ProductCacheKey);
+            _logger.LogInformation("✅ Redis cache saved: {key}", ProductCacheKey);
+            if (!string.IsNullOrEmpty(cached))
+            {
+                products = JsonSerializer.Deserialize<List<Product>>(cached);
+            }
+            else
             {
                 fromCache = false;
                 products = await _context.Products.AsNoTracking().ToListAsync();
 
-                var options = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromSeconds(30));
+                var serialized = JsonSerializer.Serialize(products);
 
-                _cache.Set(ProductCacheKey, products, options);
+                var options = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                };
+
+                await _cache.SetStringAsync(ProductCacheKey, serialized, options);
             }
 
             stopwatch.Stop();
-
-            _logger.LogInformation("[CACHE] Used: {fromCache}", fromCache);
+            _logger.LogInformation("[CACHE] Used Redis: {fromCache}", fromCache);
             _logger.LogInformation("[PERF] Execution time: {elapsed} ms", stopwatch.ElapsedMilliseconds);
 
             return products!;
@@ -55,16 +66,16 @@ namespace CachingSample.Services
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            _cache.Remove(ProductCacheKey); // Xóa cache để reload dữ liệu mới lần sau
+            await _cache.RemoveAsync(ProductCacheKey); // Invalidate cache
+
+            _logger.LogInformation("[CACHE] Removed Redis key: {key}", ProductCacheKey);
 
             return product;
         }
 
         public async Task<Product?> GetByIdAsync(Guid id)
         {
-            // Có thể dùng cache riêng nếu bạn cần cache từng product
             return await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
         }
     }
-
 }
