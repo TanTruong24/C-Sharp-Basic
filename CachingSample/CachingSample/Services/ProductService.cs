@@ -2,21 +2,18 @@
 using CachingSample.Models;
 using InMemoryCaching.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using System.Text.Json;
 
 namespace CachingSample.Services
 {
     public class ProductService : IProductService
     {
         private readonly AppDbContext _context;
-        private readonly IDistributedCache _cache;
+        private readonly ICacheService _cache;
         private readonly ILogger<ProductService> _logger;
         private const string ProductCacheKey = "products_cache";
 
-        public ProductService(AppDbContext context, IDistributedCache cache, ILogger<ProductService> logger)
+        public ProductService(AppDbContext context, ICacheService cache, ILogger<ProductService> logger)
         {
             _context = context;
             _cache = cache;
@@ -25,38 +22,31 @@ namespace CachingSample.Services
 
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
+            var stopwatch = Stopwatch.StartNew();
 
-            List<Product>? products = null;
             bool fromCache = true;
+            List<Product>? products = await _cache.GetAsync<List<Product>>(ProductCacheKey);
 
-            var cached = await _cache.GetStringAsync(ProductCacheKey);
-            _logger.LogInformation("✅ Redis cache saved: {key}", ProductCacheKey);
-            if (!string.IsNullOrEmpty(cached))
+            if (products == null || products.Count == 0)
             {
-                products = JsonSerializer.Deserialize<List<Product>>(cached);
+                fromCache = false;
+
+                products = await _context.Products.AsNoTracking().ToListAsync();
+
+                await _cache.SetAsync(ProductCacheKey, products, TimeSpan.FromMinutes(5));
+
+                _logger.LogInformation("Cache set: {key}", ProductCacheKey);
             }
             else
             {
-                fromCache = false;
-                products = await _context.Products.AsNoTracking().ToListAsync();
-
-                var serialized = JsonSerializer.Serialize(products);
-
-                var options = new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                };
-
-                await _cache.SetStringAsync(ProductCacheKey, serialized, options);
+                _logger.LogInformation("Cache hit: {key}", ProductCacheKey);
             }
 
             stopwatch.Stop();
-            _logger.LogInformation("[CACHE] Used Redis: {fromCache}", fromCache);
+            _logger.LogInformation("[CACHE] Used cache: {fromCache}", fromCache);
             _logger.LogInformation("[PERF] Execution time: {elapsed} ms", stopwatch.ElapsedMilliseconds);
 
-            return products!;
+            return products;
         }
 
         public async Task<Product> CreateAsync(ProductCreationDto dto)
