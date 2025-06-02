@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TypeLoader": {
+      "commandName": "Project",
+      "commandLineArgs": "E:\\eng\\csharp\\ReflectionSample\\MyAssembly\\bin\\Debug\\net8.0\\MyAssembly.dll"
+    }
+  }
+}
