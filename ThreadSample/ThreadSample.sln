@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventWaitHandleDemo", "Even
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemaphoreDemo", "SemaphoreDemo\SemaphoreDemo.csproj", "{4C7C3663-D531-422E-BD77-6F9B2C9F8F12}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncDemo", "AsyncDemo\AsyncDemo.csproj", "{A860CD65-EFF9-46DA-BEC6-29A92E8A0517}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{F807FB6E-D8CB-4C75-B099-02DE2CAB34D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F807FB6E-D8CB-4C75-B099-02DE2CAB34D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F807FB6E-D8CB-4C75-B099-02DE2CAB34D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A860CD65-EFF9-46DA-BEC6-29A92E8A0517}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A860CD65-EFF9-46DA-BEC6-29A92E8A0517}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A860CD65-EFF9-46DA-BEC6-29A92E8A0517}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A860CD65-EFF9-46DA-BEC6-29A92E8A0517}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4C7C3663-D531-422E-BD77-6F9B2C9F8F12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4C7C3663-D531-422E-BD77-6F9B2C9F8F12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C7C3663-D531-422E-BD77-6F9B2C9F8F12}.Release|Any CPU.ActiveCfg = Release|Any CPU
