@@ -38,9 +38,9 @@ namespace AsyncAwaitTaskDemo
     {
         static async Task Main(string[] args)
         {
-            //await Example();
+            await Example();
 
-            await BreakfastSample.BreakfastSample.RunAsync(args);
+            //await BreakfastSample.BreakfastSample.RunAsync(args);
         }
 
         static async Task Example()
@@ -57,9 +57,24 @@ namespace AsyncAwaitTaskDemo
             var t2 = Delay2ASync();
             var t3 = Delay3Async();
 
-            await t1;
-            await t2;
-            await t3;
+            var tr = Task.Run(RunMethod);
+
+            //await t1;
+            //await t2;
+            //await t3;
+
+            // thoát ra khi tất cả các task hoàn thành
+            //Task.WaitAll(t1, t2, t3);
+
+            // chạy câu lệnh sau khi một trong các task hoàn thành
+            //Task.WaitAny(t1, t2, t3);
+
+            // tạo một task mới đại diện cho t1, t2, t3
+            var t123 = Task.WhenAll(t1, t2, t3, tr);
+            await t123;
+
+            var t = CalculateResult(10);
+            await t;
 
 
             stopwatch.Stop();
@@ -86,6 +101,24 @@ namespace AsyncAwaitTaskDemo
             Console.WriteLine("Delay3...");
             await Task.Delay(3000);
             Console.WriteLine("Delay3 demo...");
+        }
+
+        // cpu bound 
+        static void RunMethod()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Console.WriteLine($"i: {i}");
+                Task.Delay(500).Wait();
+            }
+        }
+
+        // do trong hàm không có await nên hàm không cần async
+        static Task<double> CalculateResult(int n)
+        {
+            if (n == 0) return Task.FromResult(0.0);
+
+            return Task.FromResult(Math.Pow(n, 2));
         }
     }
 }
