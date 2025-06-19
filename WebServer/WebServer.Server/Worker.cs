@@ -78,26 +78,26 @@ public class Worker : BackgroundService
         await streamWriter.FlushAsync();
     }
 
-    private async Task<WRequest> ReadRequestAsync(Socket socket, CancellationToken token)
+    private async Task<WRequest> ReadRequestAsync(Socket socket, CancellationToken cancellationToken)
     {
         var stream = new NetworkStream(socket);
         var reader = new StreamReader(stream, Encoding.ASCII);
 
         var requestBuilder = new WRequestBuilder();
 
-        var requestLine = await reader.ReadLineAsync();
+        var requestLine = await reader.ReadLineAsync(cancellationToken);
         _logger.LogInformation(requestLine);
 
         if (requestLine != null)
         {
             if (RequestLineParser.TryParse(requestLine, out var parser))
             {
-                var headerLine = await reader.ReadLineAsync();
+                var headerLine = await reader.ReadLineAsync(cancellationToken);
                 while (!string.IsNullOrEmpty(headerLine))
                 {
                     _logger.LogInformation(headerLine);
 
-                    headerLine = reader.ReadLine();
+                    headerLine = await reader.ReadLineAsync(cancellationToken);
                 }
             }
         }
