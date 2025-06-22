@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Quic;
 using System.Net.Sockets;
 using System.Text;
@@ -19,17 +19,23 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        // Sử dụng WebServerOptions (bạn định nghĩa class này trong WebServerOptions.cs) để lấy IP/Port lắng nghe.
+        // Nếu IPAddress rỗng → lắng nghe tất cả IP(IPAddress.Any).
         var endPoint = new IPEndPoint(
             string.IsNullOrEmpty(this.options.IPAddress) ? IPAddress.Any : IPAddress.Parse(this.options.IPAddress), 
             this.options.Port
             );
 
+        // Tạo socket kiểu TCP.
+        // SocketType.Stream và ProtocolType.Tcp tạo một TCP server cơ bản. 
         using var serverSocket = new Socket(
             endPoint.AddressFamily,
             SocketType.Stream,
             ProtocolType.Tcp
             );
 
+        //Bind socket tới IPAddress:Port.
+        //Listen() bắt đầu lắng nghe client đến.
         serverSocket.Bind(endPoint);
 
         _logger.LogInformation($"Listening...(port: {options.Port})");
@@ -37,6 +43,9 @@ public class Worker : BackgroundService
 
         var clientConnection = new List<ClientConnection>();
 
+        // Khi có client kết nối, AcceptAsync nhận socket từ client.
+        // Tạo một task bất đồng bộ xử lý client (HandleNewClientConnectionAsync).
+        // Thêm vào list ClientConnection để theo dõi và Task.WaitAll() cuối cùng đợi xử lý xong tất cả connection.
         while (!stoppingToken.IsCancellationRequested)
         {
             var clientSocket = await serverSocket.AcceptAsync(stoppingToken);
@@ -58,8 +67,10 @@ public class Worker : BackgroundService
 
     private async Task HandleNewClientConnectionAsync(Socket socket, CancellationToken stoppingToken)
     {
+        // Tạo CancellationTokenSource với timeout 3 giây
         var cancelationTokenSource = new CancellationTokenSource(3000);
-        // read request from socket
+
+        // Đọc request từ socket qua ReadRequestAsync(...)
         WRequest request = await ReadRequestAsync(socket, CancellationTokenSource.CreateLinkedTokenSource(stoppingToken, cancelationTokenSource.Token).Token);
 
         // send back the response
@@ -80,6 +91,8 @@ public class Worker : BackgroundService
 
     private async Task<WRequest> ReadRequestAsync(Socket socket, CancellationToken cancellationToken)
     {
+        // Đọc dòng đầu tiên (ví dụ: GET /index.html HTTP/1.1)
+        // Parse dòng đầu bằng RequestLineParser.
         var stream = new NetworkStream(socket);
         var reader = new StreamReader(stream, Encoding.ASCII);
 
