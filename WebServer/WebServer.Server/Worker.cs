@@ -3,18 +3,21 @@ using System.Net.Quic;
 using System.Net.Sockets;
 using System.Text;
 using WebServer.SDK;
+using WebServer.Server.RequestReader;
 
 namespace WebServer.Server;
 
 public class Worker : BackgroundService
 {
     private WebServerOptions options;
+    private readonly ILoggerFactory _loggerFactory;
     private readonly ILogger<Worker> _logger;
 
-    public Worker(WebServerOptions options, ILogger<Worker> logger)
+    public Worker(WebServerOptions options, ILogger<Worker> logger, ILoggerFactory loggerFactory)
     {
         _logger = logger;
         this.options = options ?? throw new ArgumentNullException(nameof(options));
+        _loggerFactory = loggerFactory;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -69,9 +72,10 @@ public class Worker : BackgroundService
     {
         // Tạo CancellationTokenSource với timeout 3 giây
         var cancelationTokenSource = new CancellationTokenSource(3000);
+        IRequestReader requestReader = new DefaultRequestReader(socket, _loggerFactory.CreateLogger<DefaultRequestReader>());
 
         // Đọc request từ socket qua ReadRequestAsync(...)
-        WRequest request = await ReadRequestAsync(socket, CancellationTokenSource.CreateLinkedTokenSource(stoppingToken, cancelationTokenSource.Token).Token);
+        WRequest request = await requestReader.ReadRequestAsync(CancellationTokenSource.CreateLinkedTokenSource(stoppingToken, cancelationTokenSource.Token).Token);
 
         // send back the response
         await SendResponseAsync(socket);
@@ -89,32 +93,5 @@ public class Worker : BackgroundService
         await streamWriter.FlushAsync();
     }
 
-    private async Task<WRequest> ReadRequestAsync(Socket socket, CancellationToken cancellationToken)
-    {
-        // Đọc dòng đầu tiên (ví dụ: GET /index.html HTTP/1.1)
-        // Parse dòng đầu bằng RequestLineParser.
-        var stream = new NetworkStream(socket);
-        var reader = new StreamReader(stream, Encoding.ASCII);
 
-        var requestBuilder = new WRequestBuilder();
-
-        var requestLine = await reader.ReadLineAsync(cancellationToken);
-        _logger.LogInformation(requestLine);
-
-        if (requestLine != null)
-        {
-            if (RequestLineParser.TryParse(requestLine, out var parser))
-            {
-                var headerLine = await reader.ReadLineAsync(cancellationToken);
-                while (!string.IsNullOrEmpty(headerLine))
-                {
-                    _logger.LogInformation(headerLine);
-
-                    headerLine = await reader.ReadLineAsync(cancellationToken);
-                }
-            }
-        }
-
-        return requestBuilder.Build();
-    }
 }
